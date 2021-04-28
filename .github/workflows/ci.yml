@@ -10,8 +10,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
 
-      - name: Build and Deploy
-        uses: JamesIves/github-pages-deploy-action@master
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.1
         env:
           ACCESS_TOKEN: ${{ secrets.CI_ACTION_TOKEN }}
           BRANCH: gh-pages
