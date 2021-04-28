@@ -59,6 +59,7 @@ const generateChildrenRoutes= (config, folder = '') => {
 
 module.exports = {
   lang: "zh-CN",
+  base: '/portal-blog/',
   title: "前端壹甲壹",
   description: "Focus on Yourself!",
   shouldPrefetch: () => false,
