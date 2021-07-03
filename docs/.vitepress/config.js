@@ -59,7 +59,7 @@ const generateChildrenRoutes= (config, folder = '') => {
 
 module.exports = {
   lang: "zh-CN",
-  base: '/portal-blog/',
+  //  base: '/portal-blog/',
   title: "前端壹甲壹",
   description: "Focus on Yourself!",
   shouldPrefetch: () => false,
@@ -69,13 +69,15 @@ module.exports = {
       { text: "首页", link: "/" },
       { text: "前端图谱", link: "/frontend-graph/README", activeMatch: "^/frontend-graph/" },
       { text: "项目实战", link: "/project-develop/README", activeMatch: "^/project-develop/" },
-      { text: "源码学习", link: "/source-analysis/README", activeMatch: "^/source-analysis/" },
+      { text: "学习总结", link: "/source-analysis/README", activeMatch: "^/source-analysis/" },
       { text: "关于", link: "/about/README", activeMatch: "^/about/" },
       { text: "Github", link: "https://github.com/Yangjia23" },
     ],
     sidebarDepth: 0,
     sidebar: {
-      "/frontend-graph/": genFolderTree('frontend-graph')
+      "/frontend-graph/": genFolderTree('frontend-graph'),
+      "/project-develop/": genFolderTree('project-develop'),
+      "/source-analysis/": genFolderTree('source-analysis'),
     },
   },
 };

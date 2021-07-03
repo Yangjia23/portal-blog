@@ -10,7 +10,7 @@
     "docs:serve": "vitepress serve docs"
   },
   "devDependencies": {
-    "vitepress": "^0.13.2"
+    "vitepress": "^0.15.6"
   },
   "dependencies": {
     "fs-extra": "^9.1.0"
