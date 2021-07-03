@@ -18,12 +18,14 @@ jobs:
         run: |
           npm install
           npm run docs:build
+        env:
+          NODE_OPTIONS: '--max_old_space_size=4096'
 
       # 2、部署到 GitHub Pages
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
           BRANCH: gh-pages
-          FOLDER: ./.vitepress/dist
+          FOLDER: docs/.vitepress/dist
           ACCESS_TOKEN: ${{ secrets.CI_ACTION_TOKEN }}
           
