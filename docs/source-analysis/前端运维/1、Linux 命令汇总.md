@@ -360,6 +360,40 @@ tail [参数] [文件名]
 ### 6.4、lastlog
 查看所有用户的最后一次登录时间
 
+## 七、用户组和用户
+
+使用操作系统的人都是用户，用户组是具有相同系统权限的一组用户
+### 7.1、配置文件
+
+- `/etc/group`: 存储当前系统中所有用户组信息
+- `/etc/gshadow`: 存放当前系统中用户组的密码信息, 与 `etc/group` 中的记录一一对应
+- `/etc/passwd`: 存储当前系统中所有用户的信息
+- `/etc/shadow`: 存放当前系统中所有用户的密码信息
+
+### 7.2、命令操作
+
+**用户组**
+
+| 命令        | 示例           | 含义  |
+| ------------- |-------------| -----|
+| **`groupadd xxx`**      | `groupadd stu` | 添加用户组 |
+| **`groupadd -g num xxx`**      | `groupadd -g 666 teacher` | 添加用户组并指定编号 |
+| **`groupmod -n newX oldX`** | `groupmod -n student stu` | 用户组重命名 |
+| **`groupmod -g 999 xxx`**      | `groupadd -g 999 student` | 修改用户组编号 |
+| **`groupdel xxx`**      | `groupdel student` | 删除用户组 |
+
+**用户**
+| 命令        | 示例           | 含义  |
+| ------------- |-------------| -----|
+| **`useradd -g <group> <name>`**      | `useradd -g student Bob` | 创建用户并指定用户组 |
+| **`useradd -d <path> <name>`**      | `useradd -d /home/Jack Jack` | 创建用户并指定Home目录 |
+| **`passwd <name>`**      | `passwd Bob` | root用户可以设置用户的密码 |
+| **`usermod -d <path> <name>`**      | `usermod -d /home/Jack2 Jack` | 修改个人Home目录 |
+| **`usermod -g <group> <name>`**      | `usermod -g teacher Bob` | 修改用户组 |
+| **`userdel <name>`**      | `userdel Bob` | 删除用户 |
+| **`userdel -r <name>`**      | `userdel -r Bob` | 删除用户并删除对应的Home目录 |
+| **`id <name>`**      | `id Bob` | 显示用户的组信息 |
+
 
 
 
