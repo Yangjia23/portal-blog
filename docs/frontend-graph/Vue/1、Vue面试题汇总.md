@@ -350,10 +350,10 @@ Vue.use() 是用来安装 Vue.js 插件的。原理是
 **代码结构上**
 - Vue3 代码架构采用 `monorepo` 策略，将模块拆分到不同的  `package` 中
 - Vue3 使用 ts 做类型监测，Vue2 采用 flow 
-- Vue3 支持 tree-shaking
+- Vue3 支持 `tree-shaking`
 
 **内部代码上**
-- 数据劫持：vue2 采用 `defineProperty`, 递归遍历每个属性，添加 get、set 方法；vue3 采用 proxy, 不改变原数据
+- 数据劫持：vue2 采用 `defineProperty`, 递归遍历每个属性，添加 get、set 方法；vue3 采用 `proxy`, 不改变原数据
 - vue3 采用 `compositionApi` 进行组织架构，解决编码时反复横跳，优化服用逻辑等（`mixin`带来的数据来源不清晰，命名冲突等），同时相比于 `optionApi` 更容易做类型推断
-- vue3 对模版编译做了很多优化，编译时生成 `Block Tree`, 同时对自节点中的动态节点进行收集，可以减少比较，并且采用 `patchFlag` 标记动态节点
-- vue3 增加了 `Fragment`, `Teleport`, `Suspense` 组件
+- vue3 对模版编译做了很多优化，编译时生成 `Block Tree`, 同时对子节点中的动态节点进行收集，可以减少比较，并且采用 `patchFlag` 标记动态节点
+- vue3 增加了 `Fragment`, `Teleport`, `Suspense` 等组件
