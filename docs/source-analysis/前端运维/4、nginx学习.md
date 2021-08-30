@@ -185,7 +185,7 @@ location ~ .*\.(jpg|png|gif)$ {
 
 ### 3.3、跨域
 
-关于什么是跨域，以及汇总的解决办法，请参考 [一文汇总9种跨域方法](/portal-blog/frontend-graph/%E6%B5%8F%E8%A7%88%E5%99%A8/4%E3%80%81%E4%B8%80%E6%96%87%E6%B1%87%E6%80%BB9%E7%A7%8D%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%B3%95.html)，在 nginx 中解决跨域，需要设置不同的响应头
+关于什么是跨域，以及汇总的解决办法，请参考 [一文汇总9种跨域方法](https://yangjia23.github.io/portal-blog/frontend-graph/%E6%B5%8F%E8%A7%88%E5%99%A8/4%E3%80%81%E4%B8%80%E6%96%87%E6%B1%87%E6%80%BB9%E7%A7%8D%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%B3%95.html)，在 nginx 中解决跨域，需要设置不同的响应头
 
 **语法**
 ```shell
