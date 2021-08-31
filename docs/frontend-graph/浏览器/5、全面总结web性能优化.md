@@ -209,11 +209,142 @@ SVG: 删除无用标签，属性
  - 减少对 `Cookie` 的使用, 存储放到 `Storage` 中
  - 启用新域名，新域名的好处在于 `Cookie-Free`
 
+#### 2.4.6、缓存
+不同类型的文件对应不同的缓存策略，具体实现参考 [浏览器缓存](https://yangjia23.github.io/portal-blog/frontend-graph/%E6%B5%8F%E8%A7%88%E5%99%A8/1%E3%80%81%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98.html) 一文
 
 ## 三、DOM层面优化
 
-## 四、框架、打包工具以及代码层面优化
+**DOM 为什么这么慢？**
 
+当在 JS 中操作 DOM 时，本质上是 JS 引擎和渲染引擎之间做交流，对 DOM 的修改本质上触发了**渲染树（`render tree`）** 的变化，同时可能引发样式上的修改，就会触发**回流**或**重绘**
+
+**回流和重绘**
+- 回流（reflow）。当我们对DOM的修改引发了 **DOM 几何尺寸的变化**（修改宽、高、隐藏元素、改变位置等）时，浏览器需要重新计算元素的几何属性（同时**可能影响到其它元素的几何属性**），然后再将计算结果绘制出来，这个过程就是回流（也叫重排）
+- 重绘 (repaint)。对DOM的修改导致了**样式的变化**，却未影响其几何属性（修改颜色、背景色、字体等），浏览器不需要计算其几何属性，只需要直接绘制新的样式，这个过程叫重绘
+
+**回流的导火索**
+- 手动修改元素的几何属性
+- 像获取 `[offset | scroll | client][Top | Left | Width | Height]` 等属性时，是需要通过**实时计算**得到的，因此浏览器为了获取这些值，也会进行回流
+- 当调用 `getBoundingClientRect、 getComputedStyle` 、IE 的 `currentStyle` 等方法时，为了准确性和及时性，也会触发回流
+
+**避免手段**
+- **缓存**。当需要多次计算才能得到元素的最终位置，可使用 JS 变量先缓存计算结果，计算结束再去修改
+- 避免逐条修改 CSS 样式，可使用类名去合并样式，最后添加 **class 类**即可
+- 避免使用 table 布局，CSS 表达式 calc () 等、使用CSS3 硬件加速、动画效果应用到position属性为absolute或fixed的元素
+- **`DOM` 离线化**。现将元素设置 display: none; ,将其脱离页面，设置完样式之后，再设置 display:block, 放回页面中
+- **`Flush`队列**。浏览器并不会每次操作 DOM 都及时的反馈一次回流与重绘，它缓存了一个 flush 队列，把我们触发的回流和重绘任务都塞进队列中，当队列中的**任务多起来**、或者到达**一定的时间间隔**、或者“**不得以**”的时候，将所以任务一次性出队列⚠️注意这个 “不得以”的时候，主要是我们获取上面👆所介绍的一些属性时，浏览器为了即时准确获取属性值，会提前将 flush 队列中的任务出队列
+
+## 四、代码层面优化
 ### 4.1 框架
+以 Vue 框架为例，可参考官网中的[风格指南](https://v3.cn.vuejs.org/style-guide/)
 
 ### 4.2 打包工具
+
+以 `webpack` 为例，其优化点在于如何 **提高构建速度** 和 **减少构建体积** , 具体优化方案可参考
+[webpack 优化策略](https://yangjia23.github.io/portal-blog/frontend-graph/%E5%B7%A5%E7%A8%8B%E5%8C%96/5%E3%80%81webpack%20%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5.html) 一文 
+
+### 4.3 代码优化
+
+#### 4.3.1、代码位置
+
+CSS 放到 `<head>` 的原因？
+- 不阻塞 html 解析，尽早下载
+- 防止被外部JS阻塞
+
+JS 放到 `<body>` 的原因？
+- 可直接访问 DOM,无需监听 DOM Ready
+- 避免阻塞 html 的解析
+
+#### 4.3.2、代码拆分
+
+使用 `webpack optimization.splitChunks` 可自行设置 chunks 的拆分规则。
+
+JS 文件 `main.xxx.js` 拆分成以下几个文件
+
+- `runtime-xxx.js`：webpack 自带的核心文件，例如代码中使用 `import` 最终会被转换成 webpack 中提供的 `require` 方法
+
+- `vendors-xxx.js`：第三方库，Vue, Vuex 会被打包进去
+
+- `common-xxx.js`：公司基本的业务组件库，公共函数库等
+
+- `page-index-xxx.js`：对应每个页面
+
+CSS 文件拆分成以下几个文件
+- `reset/normolize.css`: 重置样式
+- `verdors-xxx.css`: 第三方库样式，Element
+- `common-xxx.css`: 业务公共样式库
+- `page-xxx.css`: 页面样式
+
+
+
+#### 4.3.3、JS 动态导入
+- 第三方JS库动态导入
+  ```js
+  const arr = [1,2,3]
+  import('lodash').then(_ => {
+    const clone = _.cloneDeep(arr)
+  })
+  ```
+- vue中动态导入路由对应的组件
+
+  高级用法支持设置 `loading` 和 `error`
+  ```js
+  const router = new VueRouter({
+    routes: [
+      {
+        path: '/home',
+        component: () => import('./Home.vue')
+      }
+      {
+        path: '/about',
+        component: () => ({
+          component: import('./About.vue'),
+          loading: LoadingComponent,
+          error: ErrorComponent
+        })
+      }
+    ]
+  })
+  ```
+
+- react 中动态导入
+  ```jsx
+  import React, { Suspense, lazy } from 'react'
+  import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+  const Home = lazy(() => import('./routes/Home'))
+  const About = lazy(() => import('./routes/About'))
+  const App = () => (
+    <Router>
+      <Suspense fallback={LoadingComponent}>
+        <Switch>
+          <Route exact path="/" component={Home}/>
+          <Route path="/about" component={About}/>
+        </Switch>
+      </Suspense>
+    </Router>
+  ) 
+  ```
+
+#### 4.3.4、图片懒加载
+
+  实战（todo）
+
+#### 4.3.5、CSS 代码优化
+- 使用 uncss 删除无用的css （慎用）
+- 使用更高效的选择器 （不要出现 `* *` 或者 `div *` 这种奇怪组合）
+- 减少重排。例如实现动画时，使用 `transform` 代替 `top、left、bottom、 right` 等，因为 `transform` 不会触发重排
+- 不要使用 `@import url.css`; 因为被加载的 CSS 不能与当前文件并行下载
+
+
+#### 4.3.6、JS 代码优化
+- 尽量不用全局变量，因为全局变量太多会使变量查找变慢
+- 尽量少操作 DOM，可以使用 `Fragment` 一次性插入多个 DOM 节点。
+- 不要往页面中插入大量的 HTML，一定会卡。
+- 尽量少触发重排，可以使用节流和防抖来降低重排频率。
+- 尽量少用闭包，减少内存占用，避免内存泄漏
+
+
+
+
+
+
