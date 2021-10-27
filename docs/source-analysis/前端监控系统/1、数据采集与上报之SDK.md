@@ -82,11 +82,12 @@
   }
   ```
 
-  通过自动化工具可对每个函数添加 try catch, 对错误进行兜底处理，但也存在局限性
+  通过自动化工具可对每个函数添加 try catch, 对错误进行**兜底处理**，但也存在局限性
 
   - 无法处理语法错误和异步错误
 
   ```js
+  // 下面两种报错信息，try...catch 都无法捕获
   try {
     let a =\ 'a'
   } catch(e){
@@ -106,13 +107,13 @@
 
 - `window.onerror` 方案
 
-  使用 `window.onerror` 监听也存在局限性，因为 `window.onerror` 是通过事件冒泡获取 error 信息，而网络资源加载错误是不会进行冒泡的，而 `window.addEventListener` 是通过事件捕获获取 error 信息的，
+  使用 `window.onerror` 监听也存在局限性，因为 `window.onerror` 是通过**事件冒泡**获取 error 信息，而网络资源加载错误是不会进行冒泡的，而 `window.addEventListener` 是通过**事件捕获**获取 error 信息的，
 
-  同时 `window.onerror` 可以通过赋值进行覆盖掉，而 `addEventListener` 可以绑定多个回调，所以最终使用 `addEventListener` 进行错误收集
+  同时 `window.onerror` 可以通过赋值进行覆盖掉，而 `addEventListener` 可以绑定多个回调，所以最终使用 `addEventListener` 统一对 JS 错误和资源加载错误进行收集
 
-```js
-window.addEventListener('error', handlerError, true)
-```
+  ```js
+  window.addEventListener('error', handlerError, true)
+  ```
 
 除了上面的报错，我们还需要捕获未处理的 `Promise` 错误，可通过绑定 `unhandledrejection` 事件来监听
 
@@ -146,7 +147,7 @@ console.error = (function(origin) {
 - 用户可交互时间：通常指 `DOMReady` 时间
 - 总下载时间: 可统计称 `window.onload` 时间
 
-以上指标可通过浏览器控制台中 `Lighthouse` 进行分析得出
+以上指标可在浏览器控制台中通过 `Lighthouse` 进行分析得出,也可通过 [PerformanceObserver](https://developer.mozilla.org/zh-CN/docs/Web/API/PerformanceObserver) 来获取, 具体代码可参考 [SDK-性能数据采集](https://juejin.cn/post/7017974567943536671#heading-1)
 
 性能数据获取
 
@@ -188,7 +189,7 @@ const calcTime = () => {
 
 局限性
 
-单页应用改变 URL 但不刷新页面，导致 `window.preformance` 所获取的数据不能更新
+单页应用改变 URL 但不刷新页面，导致 `window.preformance` 所获取的数据不会更新
 
 - 自定义时间计算
 
@@ -213,7 +214,7 @@ const calcTime = () => {
 
 对于单页应用，如果是 hash 模式，可监听 `hashchange` 事件, 如果是 `history` 模式，则需要重写 `history.pushState` 和 `history.replaceState` 方法
 
-对呀非单页应用，可在页面离开的时候上报数据，监听 `unload` 事件并使用 `navigation.sendBeacon` 方法保障数据发送
+对于非单页应用，可在页面离开的时候上报数据，监听 `unload` 事件并使用 `navigation.sendBeacon` 方法保障数据发送
 
 ```js
 window.addEventListener('unload', logData, false)
@@ -222,7 +223,7 @@ const logData = () => {
 }
 ```
 
-`sendBeacon` 方法相比于直接发送 Ajax 请求，有以下特性
+`sendBeacon` 方法相比于直接发送 Ajax 请求，有以下优势
 
 - 它是异步的，请求的发送不会阻塞跳转到下一个页面
 - 它在没有极限数据量和队列总数的现在下，会优先返回 true 以保障请求成功发送
@@ -232,11 +233,11 @@ const logData = () => {
 所以可以对 URL 进行判断，使用不同上报方式
 
 ```js
-const reportLog = url => {
+const reportLog = (url) => {
   // ...
-  if (urlLen < 2083>) {
+  if (urlLen < 2083) {
     imgReport(url, times)
-  } else if(navigation.sendBeacon){
+  } else if (navigation.sendBeacon) {
     sendBeacon(url, times)
   } else {
     xmlReport(url, times)
@@ -244,6 +245,12 @@ const reportLog = url => {
 }
 ```
 
-### 2.4 总结
+## 三、总结
 
 SDK 除了上面介绍的数据采集和上报功能后，还需要提供通过**配置**可开启或关闭某个指标的日志是否进行上报
+
+参考资料
+
+- [从零开始搭建前端监控 - 陈辰](https://zhuanlan.zhihu.com/p/95384915)
+- [前端监控 SDK 的一些技术要点原理分析](https://juejin.cn/post/7017974567943536671#heading-13)
+- [性能监控和错误收集与上报](https://item.jd.com/10022900825335.html)
