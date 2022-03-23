@@ -1,0 +1,1 @@
+import{_ as e,c as t,o as r}from"./app.bfda52b1.js";const f='{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"frontend-graph/JavaScript/5\u3001JS\u4E2D\u7684\u5F02\u6B65.md"}',a={};function o(_,c,n,s,p,i){return r(),t("div")}var m=e(a,[["render",o]]);export{f as __pageData,m as default};

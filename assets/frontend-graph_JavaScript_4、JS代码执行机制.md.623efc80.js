@@ -1,0 +1,10 @@
+import{_ as n,c as s,o as a,a as t}from"./app.bfda52b1.js";const f='{"title":"\u4F18\u79C0\u6587\u7AE0","description":"","frontmatter":{},"headers":[{"level":3,"title":"\u4F18\u79C0\u6587\u7AE0","slug":"\u4F18\u79C0\u6587\u7AE0"}],"relativePath":"frontend-graph/JavaScript/4\u3001JS\u4EE3\u7801\u6267\u884C\u673A\u5236.md"}',o={},p=t(`<h3 id="\u4F18\u79C0\u6587\u7AE0" tabindex="-1">\u4F18\u79C0\u6587\u7AE0 <a class="header-anchor" href="#\u4F18\u79C0\u6587\u7AE0" aria-hidden="true">#</a></h3><ul><li><a href="https://github.com/kuitos/kuitos.github.io/issues/18" target="_blank" rel="noopener noreferrer">\u4E00\u9053js\u9762\u8BD5\u9898\u5F15\u53D1\u7684\u601D\u8003 </a></li></ul><div class="language-js"><pre><code><span class="token keyword">var</span> scope <span class="token operator">=</span> <span class="token string">&quot;global scope&quot;</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">checkScope</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">var</span> scope <span class="token operator">=</span> <span class="token string">&quot;local scope&quot;</span><span class="token punctuation">;</span>
+    <span class="token keyword">function</span> <span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">return</span> scope<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> f<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token function">checkScope</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div>`,3),e=[p];function c(u,l,r,i,k,_){return a(),s("div",null,e)}var h=n(o,[["render",c]]);export{f as __pageData,h as default};
