@@ -133,23 +133,23 @@ npx tsc --init
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue'
 export default defineComponent({
-  name: "MnButton",
-});
+  name: 'MnButton',
+})
 </script>
 ```
 
 `packages/button/index.ts` 文件
 
 ```js
-import { App } from "vue";
-import Button from "./src/index.vue";
+import { App } from 'vue'
+import Button from './src/index.vue'
 
 Button.install = (app: App): void => {
-  app.component(Button.name, Button);
-};
-export default Button;
+  app.component(Button.name, Button)
+}
+export default Button
 ```
 
 此时，项目会报错，是因为默认无法解析`.vue`文件后缀的文件，需要增加`typings`
@@ -189,21 +189,21 @@ declare module '*.vue' {
 `package/gt-ui/index.ts` 文件
 
 ```js
-import Button from "@gt-ui/button";
-import { App } from "vue";
-const components = [Button];
+import Button from '@gt-ui/button'
+import { App } from 'vue'
+const components = [Button]
 const install = (app: App): void => {
   components.forEach((component) => {
     if (component.install) {
-      app.use(component);
+      app.use(component)
     } else if (component.name) {
-      app.component(component.name, component);
+      app.component(component.name, component)
     }
-  });
-};
+  })
+}
 export default {
   install,
-};
+}
 ```
 
 (ps: 后续 `index.ts`文件需通过脚本自动生成,避免手动引入 )
@@ -231,11 +231,11 @@ export default {
 `website/src/main.js` 文件
 
 ```js
-import { createApp } from "vue";
-import GtUI from "gt-ui";
-import App from "./App.vue";
+import { createApp } from 'vue'
+import GtUI from 'gt-ui'
+import App from './App.vue'
 
-createApp(App).use(GtUI).mount("#app");
+createApp(App).use(GtUI).mount('#app')
 ```
 
 `website/src/App.vue` 文件
@@ -273,10 +273,10 @@ yarn add @vitejs/plugin-vue rollup-plugin-typescript2 -D -W
 新建 `build/vite.config.build.js` 文件
 
 ```js
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import typescript from "rollup-plugin-typescript2";
-const path = require("path");
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import typescript from 'rollup-plugin-typescript2'
+const path = require('path')
 
 export default defineConfig({
   plugins: [
@@ -284,31 +284,31 @@ export default defineConfig({
     {
       ...typescript({
         tsconfigOverride: {
-          include: ["packages/**/*", "typings/vue-shim.d.ts"],
-          exclude: ["node_modules", "packages/**/__tests__/*", "website"],
+          include: ['packages/**/*', 'typings/vue-shim.d.ts'],
+          exclude: ['node_modules', 'packages/**/__tests__/*', 'website'],
         },
       }), // 默认会调用 tsconfig.json, 帮助我们生成声明文件
-      apply: "build", // 仅作用与 build 阶段
+      apply: 'build', // 仅作用与 build 阶段
     },
   ],
   build: {
     rollupOptions: {
       // 请确保外部化那些你的库中不需要的依赖
-      external: ["vue"],
+      external: ['vue'],
       output: {
         // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
         globals: {
-          vue: "Vue",
+          vue: 'Vue',
         },
       },
     },
     lib: {
-      entry: path.resolve(__dirname, "../packages/index.ts"),
-      name: "gt-ui",
-      formats: ["es", "umd"],
+      entry: path.resolve(__dirname, '../packages/index.ts'),
+      name: 'gt-ui',
+      formats: ['es', 'umd'],
     },
   },
-});
+})
 ```
 
 根目录 `package.json` 文件中增加 `script` 脚本
@@ -344,21 +344,21 @@ dist
 新建 `build/vite.config.build.disperse.js` 文件
 
 ```js
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import typescript from "rollup-plugin-typescript2";
-import { getPackagesSync } from "@lerna/project";
-const path = require("path");
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import typescript from 'rollup-plugin-typescript2'
+import { getPackagesSync } from '@lerna/project'
+const path = require('path')
 
 // 筛选出所有的组件
 const inputs = getPackagesSync()
   .map((pkg) => pkg.name)
-  .filter((name) => name.includes("@gt-ui"));
+  .filter((name) => name.includes('@gt-ui'))
 
 export default defineConfig({
   plugins: [
     vue({
-      target: "browser",
+      target: 'browser',
     }),
     {
       ...typescript({
@@ -366,35 +366,35 @@ export default defineConfig({
           compilerOptions: {
             declaration: false, // 无需再次生成 ts声明文件
           },
-          exclude: ["node_modules"],
+          exclude: ['node_modules'],
         },
       }), // 默认会调用 tsconfig.json, 帮助我们生成声明文件
-      apply: "build",
+      apply: 'build',
     },
   ],
   build: {
     emptyOutDir: false,
     rollupOptions: {
-      external: ["vue"],
+      external: ['vue'],
       input: inputs.map((name) => {
-        const pkgName = name.split("@gt-ui/")[1];
-        return path.resolve(__dirname, `../packages/${pkgName}/index.ts`);
+        const pkgName = name.split('@gt-ui/')[1]
+        return path.resolve(__dirname, `../packages/${pkgName}/index.ts`)
       }),
       output: inputs.map((name) => {
-        const pkgName = name.split("@gt-ui/")[1];
+        const pkgName = name.split('@gt-ui/')[1]
         return {
           dir: path.resolve(__dirname, `../dist/${pkgName}/`),
-          entryFileNames: "index.js",
-          format: "es",
-        };
+          entryFileNames: 'index.js',
+          format: 'es',
+        }
       }),
     },
     lib: {
-      entry: path.resolve(__dirname, "../packages/**/index.ts"),
-      name: "index",
+      entry: path.resolve(__dirname, '../packages/**/index.ts'),
+      name: 'index',
     },
   },
-});
+})
 ```
 
 根目录 package.json 文件中增加 script 脚本
@@ -428,6 +428,7 @@ dist
 ## 五、组件库样式处理
 
 ### 5.1、样式库初始化
+
 在 `monorepo` 策略下，组件库样式也可作为子项目存在，组件的样式将与逻辑进行拆分，
 通过 `lerna create theme` 创建样式项目, 将使用 `sass` 预处理器来编写样式。
 
@@ -460,20 +461,20 @@ theme
 `src/commons/config.scss` 文件
 
 ```scss
-$namespace: "gt"; // scss 变量，命名空间  gt-button
-$element-separator: "__"; //元素分隔符 gt-button__label
-$modifier-separator: "--"; // 类型修饰 gt-button--mini
-$state-prefix: "is-"; // 状态 is-plain
+$namespace: 'gt'; // scss 变量，命名空间  gt-button
+$element-separator: '__'; //元素分隔符 gt-button__label
+$modifier-separator: '--'; // 类型修饰 gt-button--mini
+$state-prefix: 'is-'; // 状态 is-plain
 ```
 
 `src/mixins/bem-mixins.scss` 文件
 
 ```scss
-@import "../commons/config.scss";
+@import '../commons/config.scss';
 
 // .gt-button{}
 @mixin b($block) {
-  $B: $namespace + "-" + $block;
+  $B: $namespace + '-' + $block;
   .#{$B} {
     @content;
   }
@@ -513,15 +514,15 @@ $state-prefix: "is-"; // 状态 is-plain
 ```scss
 @import '../mixins/index.scss';
 
-@include b(button){
+@include b(button) {
   display: inline-block;
   padding: 12px 20px;
   font-size: 14px;
-  @include m(mini){
+  @include m(mini) {
     padding: 7px 15px;
     font-size: 12px;
   }
-  @include when(disabled){
+  @include when(disabled) {
     color: #c0c4cc;
     cursor: not-allowed;
   }
@@ -532,11 +533,12 @@ $state-prefix: "is-"; // 状态 is-plain
 
 样式库打包只需要将样式文件拷贝到输出目录即可，
 `build/generate-theme.js`
-```js
-const path = require('path');
-const fs = require('fs-extra');
 
-const tasks = [];
+```js
+const path = require('path')
+const fs = require('fs-extra')
+
+const tasks = []
 
 tasks.push(
   fs.copy(
@@ -545,7 +547,7 @@ tasks.push(
   )
 )
 
-Promise.all(tasks).then(res => {
+Promise.all(tasks).then((res) => {
   // logger.success(`copy 成功`);
 })
 ```
