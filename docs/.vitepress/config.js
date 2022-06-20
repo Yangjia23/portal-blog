@@ -10,7 +10,7 @@ const isFolder = (pathUrl) => { // 判断是否为文件夹
 const genFolderTree = (folder) => {
   let config = parseFolder(folder, ROOT_PATH);
   const sidebar = generateChildrenRoutes(config)
-  return sidebar && sidebar.children
+  return sidebar && sidebar.items
 }
 
 const parseFolder = (folder, baseRoot) => {
@@ -19,9 +19,9 @@ const parseFolder = (folder, baseRoot) => {
   let files = []
   let hasReadme = false
   res.forEach(file => {
-    if(isFolder(path.join(root, file))){
+    if (isFolder(path.join(root, file))) {
       files.push(parseFolder(file, root))
-    } else if (file.indexOf('README') === 0){
+    } else if (file.indexOf('README') === 0) {
       hasReadme = true
     } else {
       files.push(file)
@@ -34,8 +34,8 @@ const parseFolder = (folder, baseRoot) => {
   }
 }
 
-const generateChildrenRoutes= (config, folder = '') => {
-  const {name, files, hasReadme} = config
+const generateChildrenRoutes = (config, folder = '') => {
+  const { name, files, hasReadme } = config
   const children = files.map(item => {
     if (Array.isArray(item.files)) {
       return generateChildrenRoutes(item, `${folder}/${name}`)
@@ -49,35 +49,34 @@ const generateChildrenRoutes= (config, folder = '') => {
   })
   const result = {
     text: name,
-    children
+    items: children
   }
-  if (hasReadme){
+  if (hasReadme) {
     result.link = `${folder}/${name}/README`
   }
   return result
 }
 
-module.exports = {
-  lang: "zh-CN",
+
+export default {
+  title: '前端壹甲壹',
+  description: 'Focus on Yourself!',
   base: '/portal-blog/',
-  title: "前端壹甲壹",
-  description: "Focus on Yourself!",
-  shouldPrefetch: () => false,
-  // 主题配置
   themeConfig: {
+    logo: '/avatar.png',
     nav: [
-      { text: "首页", link: "/" },
-      { text: "前端图谱", link: "/frontend-graph/README", activeMatch: "^/frontend-graph/" },
-      { text: "项目实战", link: "/project-develop/README", activeMatch: "^/project-develop/" },
-      { text: "学习总结", link: "/source-analysis/README", activeMatch: "^/source-analysis/" },
-      { text: "关于", link: "/about/README", activeMatch: "^/about/" },
-      { text: "Github", link: "https://github.com/Yangjia23" },
+      { text: '前端图谱', link: '/frontend-graph/README', activeMatch: "^/frontend-graph/" },
+      { text: '项目实战', link: '/project-develop/README', activeMatch: "^/project-develop/" },
+      { text: '学习总结', link: '/source-analysis/README', activeMatch: "^/source-analysis/" },
+      { text: '关于', link: '/about/', activeMatch: "^/about/" },
     ],
-    sidebarDepth: 0,
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/Yangjia23' },
+    ],
     sidebar: {
       "/frontend-graph/": genFolderTree('frontend-graph'),
       "/project-develop/": genFolderTree('project-develop'),
       "/source-analysis/": genFolderTree('source-analysis'),
     },
-  },
-};
+  }
+}
