@@ -49,7 +49,9 @@ const generateChildrenRoutes = (config, folder = '') => {
   })
   const result = {
     text: name,
-    items: children
+    items: children,
+    collapsible: true,
+    collapsed: true,
   }
   if (hasReadme) {
     result.link = `${folder}/${name}/README`
@@ -63,7 +65,7 @@ export default {
   description: 'Focus on Yourself!',
   base: '/portal-blog/',
   themeConfig: {
-    logo: '/avatar.png',
+    logo: '/portal-blog/avatar.png',
     nav: [
       { text: '前端图谱', link: '/frontend-graph/README', activeMatch: "^/frontend-graph/" },
       { text: '项目实战', link: '/project-develop/README', activeMatch: "^/project-develop/" },
