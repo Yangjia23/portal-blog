@@ -1,0 +1,1 @@
+import{_ as e,c as t,o as a}from"./app.a7810380.js";const i=JSON.parse('{"title":"","description":"","frontmatter":{"layout":"page"},"headers":[],"relativePath":"frontend-graph/README.md"}'),r={name:"frontend-graph/README.md"};function o(n,s,c,p,d,_){return a(),t("div")}const m=e(r,[["render",o]]);export{i as __pageData,m as default};
