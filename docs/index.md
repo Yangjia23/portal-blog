@@ -10,7 +10,7 @@ hero:
   text: Focus on Yourself!
   tagline: 「离开世界之前 一切都是过程」
   image:
-    src: /portal-blog/work.png
+    src: /work.png
     alt: work
   actions:
     - theme: brand

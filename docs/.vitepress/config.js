@@ -65,7 +65,7 @@ export default {
   description: 'Focus on Yourself!',
   base: '/portal-blog/',
   themeConfig: {
-    logo: '/portal-blog/avatar.png',
+    logo: '/avatar.png',
     nav: [
       { text: '前端图谱', link: '/frontend-graph/README', activeMatch: "^/frontend-graph/" },
       { text: '项目实战', link: '/project-develop/README', activeMatch: "^/project-develop/" },
